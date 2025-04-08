@@ -1,8 +1,9 @@
 package edu.kh.todoList.model.service;
 
-import static edu.kh.todoList.common.JDBCTemplate.getConnection;
+import static edu.kh.todoList.common.JDBCTemplate.*;
 
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ public class TodoListServiceImpl implements TodoListService {
 	private TodoListDAO dao = new TodoListDAOImpl();
 	
 	@Override
-	public Map<String, Object> todoListFullView() {
+	public Map<String, Object> todoListFullView() throws Exception {
 		
 		// 커넥션 생성
 		Connection conn = getConnection();
@@ -28,7 +29,32 @@ public class TodoListServiceImpl implements TodoListService {
 		int completeCount = dao.getCompleteCount(conn);
 		
 		// Map에 1번, 2번으로 얻어온 데이터를 세팅하여 리턴
+		// -> 메서드에서 반환은 하나의 값 또는 객체밖에 할 수 없기 때문에
+		// Map이라는 컬렉션을 이용해 여러값을 한번에 묶어서 반환
+		Map<String, Object> map = new HashMap<>();
 		
+		map.put("todoList", todoList);
+		map.put("completeCount", completeCount);
+		
+		close(conn);
+		
+		return map;
+	}
+
+	@Override
+	public int todoAdd(String title, String detail) throws Exception {
+
+		Connection conn = getConnection();
+		
+		int result = dao.todoAdd(conn, title, detail);
+		
+		// 트랜잭션 제어처리 -> DML (INSERT/UPDATE/DELETE)
+		if(result > 0) commit(conn);
+		else rollback(conn);
+		
+		close(conn);
+		
+		return result;
 	}
 	
 	
