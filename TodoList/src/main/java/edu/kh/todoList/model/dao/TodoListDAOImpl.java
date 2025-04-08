@@ -126,6 +126,62 @@ public class TodoListDAOImpl implements TodoListDAO {
 		
 		return result;
 	}
+
+	@Override
+	public Todo todoDetail(Connection conn, int todoNo) throws Exception {
+
+		Todo todo = null;
+		
+		try {
+			String query = prop.getProperty("todoDetail");
+			
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, todoNo);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				
+				boolean complete = rs.getInt("TODO_COMPLETE") == 1;
+				
+				todo = Todo.builder()
+						.todoNo(todoNo)
+						.todoTitle(rs.getString("TODO_TITLE"))
+						.todoDetail(rs.getString("TODO_DETAIL"))
+						.todoComplete(complete)
+						.regDate(rs.getString("REG_DATE"))
+						.build();
+			}
+			
+		} finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		return todo;
+	}
+
+	@Override
+	public int todoComplete(Connection conn, int todoNo) throws Exception {
+
+		int result = 0;
+		
+		try {
+			String query = prop.getProperty("todoComplete");
+			
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, todoNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
 	
 	
 }
