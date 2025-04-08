@@ -40,4 +40,10 @@
 		WHERE TODO_NO = ?
 	</entry>
 	
+	<!-- 할 일 삭제 -->
+	<entry key="todoDelete">
+		DELETE FROM TB_TODO
+		WHERE TODO_NO = ?
+	</entry>
+	
 </properties>
