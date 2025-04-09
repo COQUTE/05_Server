@@ -203,6 +203,29 @@ public class TodoListDAOImpl implements TodoListDAO {
 		
 		return result;
 	}
+
+	@Override
+	public int todoUpdate(Connection conn, Todo todo) throws Exception {
+		
+		int result = 0;
+		
+		try {
+			String query = prop.getProperty("todoUpdate");
+			
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, todo.getTodoTitle());
+			pstmt.setString(2, todo.getTodoDetail());
+			pstmt.setInt(3, todo.getTodoNo());
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
 	
 	
 }

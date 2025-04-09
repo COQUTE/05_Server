@@ -27,14 +27,11 @@ public class DeleteServlet extends HttpServlet {
 			
 			HttpSession session = req.getSession();
 			
-			if(result > 0) {
-				
-				session.setAttribute("message", "삭제되었습니다!");
-				resp.sendRedirect("/");
-				return;
-			}
+			String message = null;
+			if(result > 0) message = "할 일이 삭제되었습니다!";
+			else message = "todo가 존재하지 않습니다";
 			
-			session.setAttribute("message", "todo가 존재하지 않습니다");
+			session.setAttribute("message", message);
 			resp.sendRedirect("/");
 			
 		} catch (Exception e) {
