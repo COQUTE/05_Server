@@ -39,5 +39,14 @@
 		<button>수정 완료</button>
 	</form>
 
+	<%-- session 범위에 message가 있을 경우 --%>
+    <c:if test="${ not empty sessionScope.message }">
+    	<script>
+    		alert("${message}");
+    	</script>
+    	
+    	<c:remove var="message" scope="session"/>
+    </c:if>
+
 </body>
 </html>
